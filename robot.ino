@@ -28,6 +28,8 @@
 #define SW2 13
 #define Led 13
 
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_700MS, TCS34725_GAIN_1X);
+
 // Değişkenler
 
 float veri = 0; // Kullanılmayan bir değişken
@@ -36,6 +38,8 @@ float RightBaseSpeed = 220; // Sağ motorun varsayılan hızı
 float Kp = 0.07; // P terimi
 float Kd = 2; // D terimi
 float Ki = 0.0001; // I terimi
+
+int yellowBoxCount = 0;
 
 int Q[8] = {LQ8, LQ7, LQ6, LQ5, LQ4, LQ3, LQ2, LQ1}; // Çizgi sensörlerinin pinleri
 int SensMin[8]; // Sensörlerin minimum değerleri
@@ -149,8 +153,6 @@ pinMode(trigPin, OUTPUT);
 pinMode(echoPin, INPUT);
 Serial.println("Arduino İle Mesafe Sensörü Uygulaması Başlatılıyor...");
 delay(3000);
-
-
   
   // Pin modları ayarlanıyor
   pinMode(Rpwm1, OUTPUT);
@@ -244,9 +246,13 @@ void loop() {
   if (distance3 < 30) {
     MotorsSpeed(0,0);
     if ((b > r))&&(b > g)) {
-    RightSpeed = constrain(RightSpeed, -100, 100);
-  LeftSpeed = constrain(LeftSpeed, 100, -100);
-  }
+      RightSpeed = constrain(RightSpeed, -100, 100);
+      LeftSpeed = constrain(LeftSpeed, 100, -100);
+      yellowBoxCount++;
+      delay(1000)
+      RightSpeed = constrain(RightSpeed, 0, 0);
+      LeftSpeed = constrain(LeftSpeed, 0, 0);
+    }
   }
 
   delay(500);
